@@ -6,9 +6,6 @@ import auth from './resolvers/Mutation/auth'
 import mongoose from 'mongoose'
 
 const jwt = require('jsonwebtoken')
-interface Request extends Express.Request {
-  headers: any
-}
 
 const resolvers = {
   Query: {
