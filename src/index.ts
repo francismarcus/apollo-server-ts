@@ -18,7 +18,7 @@ const resolvers = {
 
 const getUser = async (token: string) => {
     try {
-      return await jwt.verify(token, process.env.SECRET) 
+      return await jwt.verify(token, process.env.APP_SECRET) 
     } catch (e) {
       console.log(e)
     }
