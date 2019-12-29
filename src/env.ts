@@ -1,7 +1,7 @@
 import * as dotenv from "dotenv";
 
 dotenv.config();
-    let path = `../../.env`;
+    const path = `../../.env`;
 
 dotenv.config({ path: path });
 
