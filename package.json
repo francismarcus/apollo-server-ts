@@ -6,20 +6,32 @@
   "scripts": {
     "start:build": "tsc -w",
     "start:run": "nodemon dist/index.js",
-    "start": "concurrently npm:start:*"
+    "start": "concurrently npm:start:*",
+    "generate": "graphql-codegen"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@graphql-codegen/cli": "^1.9.1",
+    "@graphql-codegen/typescript": "^1.9.1",
+    "@graphql-codegen/typescript-resolvers": "^1.9.1",
+    "@types/dotenv": "^8.2.0",
     "@types/graphql": "^14.5.0",
+    "@types/mongoose": "^5.5.36",
     "@types/node": "^13.1.1",
+    "@types/node-fetch": "^2.5.4",
     "concurrently": "^5.0.2",
     "nodemon": "^2.0.2",
     "typescript": "^3.7.4"
   },
   "dependencies": {
-    "apollo-server": "^2.9.15",
-    "graphql": "^14.5.8"
+    "apollo-server-express": "^2.9.15",
+    "bcrypt": "^3.0.7",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "graphql": "^14.5.8",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "5.5.3"
   }
 }
