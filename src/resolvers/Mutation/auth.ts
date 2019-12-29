@@ -11,11 +11,8 @@ const signup: MutationResolvers['signup'] = async (
 	args: MutationSignupArgs
 ): Promise<AuthPayload> => {
 	const password = await bcrypt.hash(args.password, 10);
-	const user = await User.create({
-		...args,
-		password
-  });
-  
+	const user = await User.create({ ...args, password });
+
 	return {
 		token: jwt.sign({ userId: user.id }, process.env.APP_SECRET),
 		user
