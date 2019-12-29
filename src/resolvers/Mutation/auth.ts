@@ -1,10 +1,9 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import { MutationResolvers, AuthPayload, MutationLoginArgs, MutationSignupArgs } from 'types';
 import { UserInterface } from 'interfaces';
 import { User } from '../../models/User';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const bcrypt = require('bcrypt');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const jwt = require('jsonwebtoken');
 
 const signup: MutationResolvers['signup'] = async (
