@@ -5,11 +5,12 @@ import typeDefs from './schemas'
 import auth from './resolvers/Mutation/auth'
 import mongoose from 'mongoose'
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const jwt = require('jsonwebtoken')
 
 const resolvers = {
   Query: {
-    hi: () => 'Hello World'
+    hi: (): string => 'Hello World'
   },
   Mutation: {
     ...auth
@@ -36,14 +37,14 @@ const getUser = async (token: string) => {
   const apolloServer = new ApolloServer({ 
     typeDefs, 
     resolvers,
-    context: (req: Express.Request) => {
-      
+    context: (req: Express.Request): void => {
+      console.log(req)
     }
      });
   
   apolloServer.applyMiddleware({ app })
   
-;(async () => { 
+;(async (): Promise<void> => { 
   await mongoose.connect(ATLAS_URI, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
