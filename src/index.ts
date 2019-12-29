@@ -1,49 +1,63 @@
-const { ApolloServer, gql } = require('apollo-server');
+import { ATLAS_URI } from './env'
+import { ApolloServer } from 'apollo-server-express'
+import express, { Express } from 'express'
+import typeDefs from './schemas'
+import auth from './resolvers/Mutation/auth'
+import mongoose from 'mongoose'
 
-// A schema is a collection of type definitions (hence "typeDefs")
-// that together define the "shape" of queries that are executed against
-// your data.
-const typeDefs = gql`
-  # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
+const jwt = require('jsonwebtoken')
+interface Request extends Express.Request {
+  headers: any
+}
 
-  # This "Book" type defines the queryable fields for every book in our data source.
-  type Book {
-    title: String
-    author: String
-  }
-
-  # The "Query" type is special: it lists all of the available queries that
-  # clients can execute, along with the return type for each. In this
-  # case, the "books" query returns an array of zero or more Books (defined above).
-  type Query {
-    books: [Book]
-  }
-`;
-
-const books = [
-  {
-    title: 'Harry Potter and the Chamber of Secrets',
-    author: 'J.K. Rowling',
-  },
-  {
-    title: 'Jurassic Park',
-    author: 'Michael Crichton',
-  },
-];
-
-// Resolvers define the technique for fetching the types defined in the
-// schema. This resolver retrieves books from the "books" array above.
 const resolvers = {
   Query: {
-    books: () => books,
+    hi: () => 'Hello World'
   },
+  Mutation: {
+    ...auth
+  }
 };
 
-// The ApolloServer constructor requires two parameters: your schema
-// definition and your set of resolvers.
-const server = new ApolloServer({ typeDefs, resolvers });
+const getUser = async (token: string) => {
+    try {
+      return await jwt.verify(token, process.env.SECRET) 
+    } catch (e) {
+      console.log(e)
+    }
+};
 
-// The `listen` method launches a web server.
-server.listen().then(({ url }: { url: string }) => {
-  console.log(`🚀  Server ready at ${url}`);
-});
+/*
+  context: ({ req }: { req: Request }) => {
+    const token = req.headers.authorization
+    const user = getUser(token)
+    return { user }
+  }
+  */
+
+  const app = express()
+  const apolloServer = new ApolloServer({ 
+    typeDefs, 
+    resolvers,
+    context: (req: Express.Request) => {
+      
+    }
+     });
+  
+  apolloServer.applyMiddleware({ app })
+  
+;(async () => { 
+  await mongoose.connect(ATLAS_URI, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useCreateIndex: true,
+    })
+})()
+
+  app.listen({ port: 4000 }, () => {
+    console.log(`🚀 Server ready at http://localhost:4000${apolloServer.graphqlPath}`)
+  })
+
+  
+
+
