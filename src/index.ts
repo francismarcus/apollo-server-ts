@@ -7,16 +7,15 @@ import mongoose from 'mongoose';
 import { ExpressRequest } from 'interfaces';
 import Query from './resolvers';
 import { Context } from 'apollo-server-core';
+import { Maybe } from 'types'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const jwt = require('jsonwebtoken');
-
 const resolvers = {
 	Query,
 	Mutation
 };
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const getUser = (token: string) => {
+const getUser = (token: string): Maybe<object | string> => {
 	try {
 		if (token) {
 			return jwt.verify(token, process.env.APP_SECRET);
