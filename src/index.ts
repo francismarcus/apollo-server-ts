@@ -27,14 +27,6 @@ const getUser = (token: string) => {
 	}
 };
 
-/*
-  context: ({ req }: { req: Request }) => {
-    const token = req.headers.authorization
-    const user = getUser(token)
-    return { user }
-  }
-  */
-
 const app = express();
 const apolloServer = new ApolloServer({
 	typeDefs,
