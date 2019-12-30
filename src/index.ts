@@ -1,28 +1,30 @@
-import { ATLAS_URI } from './env'
-import { ApolloServer } from 'apollo-server-express'
-import express, { Express } from 'express'
-import typeDefs from './schemas'
-import auth from './resolvers/Mutation/auth'
-import mongoose from 'mongoose'
-
+import { ATLAS_URI } from './env';
+import { ApolloServer } from 'apollo-server-express';
+import express from 'express';
+import typeDefs from './schemas';
+import Mutation from './resolvers/Mutation';
+import mongoose from 'mongoose';
+import { ExpressRequest } from 'interfaces';
+import Query from './resolvers';
+import { Context } from 'apollo-server-core';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
 
 const resolvers = {
-  Query: {
-    hi: (): string => 'Hello World'
-  },
-  Mutation: {
-    ...auth
-  }
+	Query,
+	Mutation
 };
 
-const getUser = async (token: string) => {
-    try {
-      return await jwt.verify(token, process.env.APP_SECRET) 
-    } catch (e) {
-      console.log(e)
-    }
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+const getUser = (token: string) => {
+	try {
+		if (token) {
+			return jwt.verify(token, process.env.APP_SECRET);
+		}
+		return null;
+	} catch (e) {
+		return null;
+	}
 };
 
 /*
@@ -33,29 +35,26 @@ const getUser = async (token: string) => {
   }
   */
 
-  const app = express()
-  const apolloServer = new ApolloServer({ 
-    typeDefs, 
-    resolvers,
-    context: (req: Express.Request): void => {
-      console.log(req)
-    }
-     });
-  
-  apolloServer.applyMiddleware({ app })
-  
-;(async (): Promise<void> => { 
-  await mongoose.connect(ATLAS_URI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        useCreateIndex: true,
-    })
-})()
+const app = express();
+const apolloServer = new ApolloServer({
+	typeDefs,
+	resolvers,
+	context: ({ req }: { req: ExpressRequest }): Context => {
+		const token = req.headers.authorization;
+		const me = getUser(token);
+		return { me };
+	}
+});
 
-  app.listen({ port: 4000 }, () => {
-    console.log(`🚀 Server ready at http://localhost:4000${apolloServer.graphqlPath}`)
-  })
+apolloServer.applyMiddleware({ app });
+(async (): Promise<void> => {
+	await mongoose.connect(ATLAS_URI, {
+		useNewUrlParser: true,
+		useUnifiedTopology: true,
+		useCreateIndex: true
+	});
+})();
 
-  
-
-
+app.listen({ port: 4000 }, () => {
+	console.log(`🚀 Server ready at http://localhost:4000${apolloServer.graphqlPath}`);
+});
