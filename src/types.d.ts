@@ -1,23 +1,22 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 export type Maybe<T> = T | null;
 export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
+  ID: string,
+  String: string,
+  Boolean: boolean,
+  Int: number,
+  Float: number,
   /** The `Upload` scalar type represents a file upload. */
-  Upload: any;
+  Upload: any,
 };
 
 
 export type AuthPayload = {
-   __typename?: 'AuthPayload';
-  token: Scalars['String'];
-  user: User;
+   __typename?: 'AuthPayload',
+  token: Scalars['String'],
+  user: User,
 };
 
 export enum CacheControlScope {
@@ -26,34 +25,35 @@ export enum CacheControlScope {
 }
 
 export type Mutation = {
-   __typename?: 'Mutation';
-  signup: AuthPayload;
-  login: AuthPayload;
+   __typename?: 'Mutation',
+  signup: AuthPayload,
+  login: AuthPayload,
 };
 
 
 export type MutationSignupArgs = {
-  email: Scalars['String'];
-  password: Scalars['String'];
-  name: Scalars['String'];
+  email: Scalars['String'],
+  password: Scalars['String'],
+  name: Scalars['String']
 };
 
 
 export type MutationLoginArgs = {
-  email: Scalars['String'];
-  password: Scalars['String'];
+  email: Scalars['String'],
+  password: Scalars['String']
 };
 
 export type Query = {
-   __typename?: 'Query';
-  hi: Scalars['String'];
+   __typename?: 'Query',
+  me: User,
 };
 
+
 export type User = {
-   __typename?: 'User';
-  id: Scalars['ID'];
-  email: Scalars['String'];
-  name: Scalars['String'];
+   __typename?: 'User',
+  id: Scalars['ID'],
+  email: Scalars['String'],
+  name: Scalars['String'],
 };
 
 
@@ -127,65 +127,65 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
-  Query: ResolverTypeWrapper<{}>;
-  String: ResolverTypeWrapper<Scalars['String']>;
-  Mutation: ResolverTypeWrapper<{}>;
-  AuthPayload: ResolverTypeWrapper<AuthPayload>;
-  User: ResolverTypeWrapper<User>;
-  ID: ResolverTypeWrapper<Scalars['ID']>;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
-  CacheControlScope: CacheControlScope;
-  Upload: ResolverTypeWrapper<Scalars['Upload']>;
-  Int: ResolverTypeWrapper<Scalars['Int']>;
+  Query: ResolverTypeWrapper<{}>,
+  User: ResolverTypeWrapper<User>,
+  ID: ResolverTypeWrapper<Scalars['ID']>,
+  String: ResolverTypeWrapper<Scalars['String']>,
+  Mutation: ResolverTypeWrapper<{}>,
+  AuthPayload: ResolverTypeWrapper<AuthPayload>,
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
+  CacheControlScope: CacheControlScope,
+  Upload: ResolverTypeWrapper<Scalars['Upload']>,
+  Int: ResolverTypeWrapper<Scalars['Int']>,
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-  Query: {};
-  String: Scalars['String'];
-  Mutation: {};
-  AuthPayload: AuthPayload;
-  User: User;
-  ID: Scalars['ID'];
-  Boolean: Scalars['Boolean'];
-  CacheControlScope: CacheControlScope;
-  Upload: Scalars['Upload'];
-  Int: Scalars['Int'];
+  Query: {},
+  User: User,
+  ID: Scalars['ID'],
+  String: Scalars['String'],
+  Mutation: {},
+  AuthPayload: AuthPayload,
+  Boolean: Scalars['Boolean'],
+  CacheControlScope: CacheControlScope,
+  Upload: Scalars['Upload'],
+  Int: Scalars['Int'],
 };
 
-export type CacheControlDirectiveResolver<Result, Parent, ContextType = any, Args = {   maxAge?: Maybe<Maybe<Scalars['Int']>>;
-  scope?: Maybe<Maybe<CacheControlScope>>; }> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+export type CacheControlDirectiveResolver<Result, Parent, ContextType = any, Args = {   maxAge?: Maybe<Maybe<Scalars['Int']>>,
+  scope?: Maybe<Maybe<CacheControlScope>> }> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
 export type AuthPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['AuthPayload'] = ResolversParentTypes['AuthPayload']> = {
-  token?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  token?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>,
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  signup?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignupArgs, 'email' | 'password' | 'name'>>;
-  login?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'email' | 'password'>>;
+  signup?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignupArgs, 'email' | 'password' | 'name'>>,
+  login?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'email' | 'password'>>,
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  hi?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  me?: Resolver<ResolversTypes['User'], ParentType, ContextType>,
 };
 
 export interface UploadScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Upload'], any> {
-  name: 'Upload';
+  name: 'Upload'
 }
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
 };
 
 export type Resolvers<ContextType = any> = {
-  AuthPayload?: AuthPayloadResolvers<ContextType>;
-  Mutation?: MutationResolvers<ContextType>;
-  Query?: QueryResolvers<ContextType>;
-  Upload?: GraphQLScalarType;
-  User?: UserResolvers<ContextType>;
+  AuthPayload?: AuthPayloadResolvers<ContextType>,
+  Mutation?: MutationResolvers<ContextType>,
+  Query?: QueryResolvers<ContextType>,
+  Upload?: GraphQLScalarType,
+  User?: UserResolvers<ContextType>,
 };
 
 
@@ -195,7 +195,7 @@ export type Resolvers<ContextType = any> = {
 */
 export type IResolvers<ContextType = any> = Resolvers<ContextType>;
 export type DirectiveResolvers<ContextType = any> = {
-  cacheControl?: CacheControlDirectiveResolver<any, any, ContextType>;
+  cacheControl?: CacheControlDirectiveResolver<any, any, ContextType>,
 };
 
 
