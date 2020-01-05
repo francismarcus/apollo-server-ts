@@ -2,18 +2,14 @@ import { ATLAS_URI } from './env';
 import { ApolloServer } from 'apollo-server-express';
 import express from 'express';
 import typeDefs from './schemas';
-import Mutation from './resolvers/Mutation';
 import mongoose from 'mongoose';
 import { ExpressRequest } from 'interfaces';
-import Query from './resolvers';
+import resolvers from './resolvers';
 import { Context } from 'apollo-server-core';
 import { Maybe } from 'types'
+import models from './models'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const jwt = require('jsonwebtoken');
-const resolvers = {
-	Query,
-	Mutation
-};
 
 const getUser = (token: string): Maybe<object | string> => {
 	try {
@@ -33,7 +29,10 @@ const apolloServer = new ApolloServer({
 	context: ({ req }: { req: ExpressRequest }): Context => {
 		const token = req.headers.authorization;
 		const me = getUser(token);
-		return { me };
+		return { 
+			models,
+			me
+		 };
 	}
 });
 
