@@ -1,15 +1,16 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { MutationResolvers, MutationCreateProgramArgs, Maybe } from 'types';
+import { MutationResolvers, MutationCreateProgramArgs } from 'types';
 import { Context, ProgramInterface } from 'interfaces';
 import { Program } from '../../models/Program';
 
-const createProgram = async (
+const createProgram: MutationResolvers['createProgram'] = async (
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	_: any,
 	{ name }: MutationCreateProgramArgs,
 	{ me }: Context
-): Promise<any> => {
+): Promise<ProgramInterface> => {
 	const { userId } = me;
-	const program = await Program.create({
+	const program: ProgramInterface = await Program.create({
 		name,
 		userId
 	});
