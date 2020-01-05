@@ -26,9 +26,14 @@ export default gql`
 		allPrograms: [Program]!
 	}
 
+	input LoginInput {
+		email: String!
+		password: String!
+	}
+
 	type Mutation {
 		signup(email: String!, password: String!, name: String!): AuthPayload!
-		login(email: String!, password: String!): AuthPayload!
+		login(credentials: LoginInput!): AuthPayload!
 		createProgram(name: String!): Program!
 	}
 `;
