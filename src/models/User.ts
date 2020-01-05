@@ -17,3 +17,4 @@ const userSchema = new mongoose.Schema({
 });
 
 export const User = mongoose.model('User', userSchema);
+export type UserModelType = ReturnType<typeof User>
