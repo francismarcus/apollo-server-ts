@@ -28,6 +28,7 @@ export type Mutation = {
    __typename?: 'Mutation',
   signup: AuthPayload,
   login: AuthPayload,
+  createProgram: Program,
 };
 
 
@@ -43,9 +44,24 @@ export type MutationLoginArgs = {
   password: Scalars['String']
 };
 
+
+export type MutationCreateProgramArgs = {
+  name: Scalars['String']
+};
+
+export type Program = {
+   __typename?: 'Program',
+  id: Scalars['ID'],
+  name: Scalars['String'],
+  user: User,
+};
+
 export type Query = {
    __typename?: 'Query',
   me: User,
+  allUsers?: Maybe<Array<Maybe<User>>>,
+  myPrograms?: Maybe<Array<Maybe<Program>>>,
+  allPrograms?: Maybe<Array<Maybe<Program>>>,
 };
 
 
@@ -54,6 +70,7 @@ export type User = {
   id: Scalars['ID'],
   email: Scalars['String'],
   name: Scalars['String'],
+  programs?: Maybe<Array<Maybe<Program>>>,
 };
 
 
@@ -131,6 +148,7 @@ export type ResolversTypes = {
   User: ResolverTypeWrapper<User>,
   ID: ResolverTypeWrapper<Scalars['ID']>,
   String: ResolverTypeWrapper<Scalars['String']>,
+  Program: ResolverTypeWrapper<Program>,
   Mutation: ResolverTypeWrapper<{}>,
   AuthPayload: ResolverTypeWrapper<AuthPayload>,
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
@@ -145,6 +163,7 @@ export type ResolversParentTypes = {
   User: User,
   ID: Scalars['ID'],
   String: Scalars['String'],
+  Program: Program,
   Mutation: {},
   AuthPayload: AuthPayload,
   Boolean: Scalars['Boolean'],
@@ -164,10 +183,20 @@ export type AuthPayloadResolvers<ContextType = any, ParentType extends Resolvers
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   signup?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignupArgs, 'email' | 'password' | 'name'>>,
   login?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'email' | 'password'>>,
+  createProgram?: Resolver<ResolversTypes['Program'], ParentType, ContextType, RequireFields<MutationCreateProgramArgs, 'name'>>,
+};
+
+export type ProgramResolvers<ContextType = any, ParentType extends ResolversParentTypes['Program'] = ResolversParentTypes['Program']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>,
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   me?: Resolver<ResolversTypes['User'], ParentType, ContextType>,
+  allUsers?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>,
+  myPrograms?: Resolver<Maybe<Array<Maybe<ResolversTypes['Program']>>>, ParentType, ContextType>,
+  allPrograms?: Resolver<Maybe<Array<Maybe<ResolversTypes['Program']>>>, ParentType, ContextType>,
 };
 
 export interface UploadScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Upload'], any> {
@@ -178,11 +207,13 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  programs?: Resolver<Maybe<Array<Maybe<ResolversTypes['Program']>>>, ParentType, ContextType>,
 };
 
 export type Resolvers<ContextType = any> = {
   AuthPayload?: AuthPayloadResolvers<ContextType>,
   Mutation?: MutationResolvers<ContextType>,
+  Program?: ProgramResolvers<ContextType>,
   Query?: QueryResolvers<ContextType>,
   Upload?: GraphQLScalarType,
   User?: UserResolvers<ContextType>,
