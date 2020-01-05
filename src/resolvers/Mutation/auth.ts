@@ -21,8 +21,9 @@ const signup: MutationResolvers['signup'] = async (
 
 const login: MutationResolvers['login'] = async (
 	_,
-	{ email, password }: MutationLoginArgs
+	{ credentials }: MutationLoginArgs
 ): Promise<AuthPayload> => {
+	const { email, password } = credentials
 	const user: UserInterface = await User.findOne({ email });
 
 	if (!user) throw new Error(`No user found for email: ${email}`);
