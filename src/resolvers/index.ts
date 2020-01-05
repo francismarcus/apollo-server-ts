@@ -1,12 +1,9 @@
-import { QueryResolvers } from 'types';
-import { UserInterface, Context } from 'interfaces';
-import { User } from '../models/User';
-
-const me: QueryResolvers['me'] = async (_, args, { me }: Context) => {
-	const user: UserInterface = await User.findById(me.userId);
-	return user;
-};
+import { Query }from './Query'
+import Mutation from './Mutation'
+import { Program } from './Program'
 
 export default {
-	me
+	Query,
+	Mutation,
+	Program
 };
