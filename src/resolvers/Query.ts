@@ -17,8 +17,8 @@ const allPrograms: QueryResolvers['allPrograms'] = async (_, args, ctx: Context)
 }
 
 export const Query = {
-    me,
-    allUsers,
+	me,
+	allUsers,
 	myPrograms,
 	allPrograms
 };
