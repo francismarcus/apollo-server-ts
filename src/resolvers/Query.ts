@@ -1,19 +1,18 @@
 import { QueryResolvers } from 'types';
-import { UserInterface, Context } from 'interfaces';
+import { UserInterface, ProgramInterface, Context } from 'interfaces';
 
-const me: QueryResolvers['me'] = async (_, args, { me, models }: Context) => {
-	const user: UserInterface = await models.User.findById(me.userId);
-	return user;
+const me: QueryResolvers['me'] = async (_, args, { me, models }: Context): Promise<UserInterface> => {
+	return await models.User.findById(me.userId);
 };
 
-const allUsers: QueryResolvers['allUsers'] = async (_, args, ctx: Context) => {
+const allUsers: QueryResolvers['allUsers'] = async (_, args, ctx: Context): Promise<UserInterface[]> => {
 	return await ctx.models.User.find({})
 }
-const myPrograms: QueryResolvers['myPrograms'] = async (_, args, ctx: Context) => {
+const myPrograms: QueryResolvers['myPrograms'] = async (_, args, ctx: Context): Promise<ProgramInterface[]> => {
 	return await ctx.models.Program.find({ userId: ctx.me.userId })
 };
 
-const allPrograms: QueryResolvers['allPrograms'] = async (_, args, ctx: Context) => {
+const allPrograms: QueryResolvers['allPrograms'] = async (_, args, ctx: Context): Promise<ProgramInterface[]> => {
 	return await ctx.models.Program.find({})
 }
 
