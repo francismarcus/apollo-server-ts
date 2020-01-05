@@ -19,7 +19,6 @@ export interface Me {
 	userId: string;
 }
 export interface Context extends ContextFunction {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	me: Me;
 	models: Models;
 }
