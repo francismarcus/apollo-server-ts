@@ -11,7 +11,21 @@ const signup: MutationResolvers['signup'] = async (
 	args: MutationSignupArgs
 ): Promise<AuthPayload> => {
 	const password = await bcrypt.hash(args.password, 10);
-	const user: UserInterface = await User.create({ ...args, password });
+
+	try {
+		const user: UserInterface = await User.create({ ...args, password })
+		return {
+			token: jwt.sign({ userId: user.id }, process.env.APP_SECRET),
+			user
+		};
+	} catch (e) {
+		if (e.code === 11000) {
+			throw new Error(`A user with that email already exists`)
+		}
+	}
+
+
+
 
 	return {
 		token: jwt.sign({ userId: user.id }, process.env.APP_SECRET),
