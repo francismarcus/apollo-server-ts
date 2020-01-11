@@ -2,6 +2,7 @@
 import { MutationResolvers, AuthPayload, MutationLoginArgs, MutationSignupArgs } from 'types';
 import { UserInterface } from 'interfaces';
 import { User } from '../../models/User';
+import { MongoError } from 'mongodb'
 
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -11,21 +12,12 @@ const signup: MutationResolvers['signup'] = async (
 	args: MutationSignupArgs
 ): Promise<AuthPayload> => {
 	const password = await bcrypt.hash(args.password, 10);
-
-	try {
-		const user: UserInterface = await User.create({ ...args, password })
-		return {
-			token: jwt.sign({ userId: user.id }, process.env.APP_SECRET),
-			user
-		};
-	} catch (e) {
-		if (e.code === 11000) {
+	const user: UserInterface = await User.create({ ...args, password })
+	.catch((error: MongoError) => {
+		if (error.code === 11000) {
 			throw new Error(`A user with that email already exists`)
 		}
-	}
-
-
-
+	})
 
 	return {
 		token: jwt.sign({ userId: user.id }, process.env.APP_SECRET),
