@@ -2,9 +2,9 @@ import { ATLAS_URI } from "./env";
 import { ApolloServer } from "apollo-server-express";
 import express from "express";
 import typeDefs from "./schemas";
-import mongoose from "mongoose";
 import resolvers from "./resolvers";
 import context from "./context";
+import mongoose from "mongoose";
 
 const app = express();
 const apolloServer = new ApolloServer({
