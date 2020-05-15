@@ -1,48 +1,58 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { MutationResolvers, AuthPayload, MutationLoginArgs, MutationSignupArgs } from 'types';
-import { UserInterface } from 'interfaces';
+import {
+	MutationResolvers,
+	MutationLoginArgs,
+	MutationSignupArgs,
+} from 'types';
 import { User } from '../../models/User';
-import { MongoError } from 'mongodb'
+import { MongoError } from 'mongodb';
 
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const signup: MutationResolvers['signup'] = async (
-	_,
-	args: MutationSignupArgs
-): Promise<AuthPayload> => {
-	const password = await bcrypt.hash(args.password, 10);
-	const user: UserInterface = await User.create({ ...args, password })
-	.catch((error: MongoError) => {
-		if (error.code === 11000) {
-			throw new Error(`A user with that email already exists`)
-		}
-	})
+async function generatePassword(password: string): Promise<string> {
+	const salt = await bcrypt.genSalt(10);
+	return await bcrypt.hash(password, salt);
+}
 
-	return {
-		token: jwt.sign({ userId: user.id }, process.env.APP_SECRET),
-		user
-	};
-};
+async function comparePassword(password: string, hash: string): Promise<boolean> {
+	return await bcrypt.compare(password, hash);
+}
 
-const login: MutationResolvers['login'] = async (
-	_,
-	{ credentials }: MutationLoginArgs
-): Promise<AuthPayload> => {
-	const { email, password } = credentials
-	const user: UserInterface = await User.findOne({ email });
+function generateJwt(userId: string): string {
+	return jwt.sign({ userId }, process.env.APP_SECRET);
+}
 
-	if (!user) throw new Error(`No user found for email: ${email}`);
-	const passwordValid = await bcrypt.compare(password, user.password);
-	if (!passwordValid) throw new Error('Invalid password');
+export const auth: MutationResolvers = {
+	login: async (_, { credentials }: MutationLoginArgs) => {
+		const { email, password } = credentials;
+		const user = await User.findOne({ email });
 
-	return {
-		token: jwt.sign({ userId: user.id }, process.env.APP_SECRET),
-		user
-	};
-};
+		if (!user) throw new Error(`No user found for email: ${email}`);
 
-export default {
-	login,
-	signup
+		const passwordValid = await comparePassword(password, user.password);
+		if (!passwordValid) throw new Error('Invalid password');
+
+		const token = generateJwt(user.id);
+
+		return {
+			token,
+			user
+		};
+	},
+	signup: async (_, args: MutationSignupArgs) => {
+		const password = await generatePassword(args.password);
+		const user = await User.create({ ...args, password }).catch((error: MongoError) => {
+			if (error.code === 11000) {
+				throw new Error(`A user with that email already exists`);
+			}
+		});
+
+		const token = generateJwt(user.id);
+
+		return {
+			token,
+			user
+		};
+	},
 };
