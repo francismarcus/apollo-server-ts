@@ -1,7 +1,10 @@
-import auth from './auth';
-import program from './program'
+import { auth } from './auth';
+import { program } from './program';
+import { MutationResolvers } from 'types';
 
-export default {
-    ...auth,
-    ...program,
+const Mutation: MutationResolvers = {
+	...auth,
+	...program
 };
+
+export default Mutation;
