@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Context, UserInterface } from 'interfaces'
+import { Context } from 'interfaces';
+import { ProgramResolvers } from 'types';
 
-export const Program = {
-    user: (_: any, args: any, { me, models }: Context): UserInterface => {
-        return models.User.findById(me.userId)
-    }
-}
+export const Program: ProgramResolvers = {
+	user: ({ userId }: any, args, { DataLoaders }: Context) => {
+		return DataLoaders.user.load(userId);
+	}
+};
